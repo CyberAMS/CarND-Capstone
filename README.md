@@ -280,7 +280,14 @@ def run_inference_for_single_image(self,image, graph):
 
 ## 3. Traffic light detection
 
+We used TensorFlow Object Detection API and fine-tuned with traffic lights data a pre-trained SSD MobileNet on the COCO Dataset. The model is able to detect traffic lights and classify their color into Green, Yellow and Red. 
+
+In the first iteration of this project, we combined three datasets which combined a mix of images from the simulator and from Carla testing site. The combination of these three datasets adds up to a total of 2,613 images. The results of the model sufficiently met our needs, achieving a good balance between accuracy and fast running time.
+
 The [description](./Traffic_Light_Detection/README.md) of the traffic light detection model is located in a separate [folder](./Traffic_Light_Detection/).
+
+
+
 
 ## 4. Execution
 
