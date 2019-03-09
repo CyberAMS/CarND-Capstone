@@ -359,7 +359,7 @@ The second ROS bag contains several full loops around the test site. The state o
 
 <img src="docu_images/190309_StAn_CAP_loop_smallest.gif" width="100%">
 
-The third ROS bag contains several approaches on the traffic light.
+The third ROS bag contains several approaches on the traffic light. The state of the traffic light is mostly classified correctly. There are only a few instances where `RED` and `YELLOW` are mixed up for a very short amount of time. As we react to `RED` and `YELLOW` traffic lights in the same way, this is not a big issue for the given task. Also, when the traffic light is very close, it sometimes is not detected at all. As we stop further away from the traffic light, this is not a big issue for the given task.
 
 <img src="docu_images/190309_StAn_CAP_train_smallest_short.gif" width="100%">
 
@@ -371,4 +371,4 @@ The second challenge is to find an approach to detect traffic lights in front of
 
 ## 6. Known issues and possible improvements
 
-As the provided stop line coordinates for the traffic lights are not exact and additional inaccuracy is added by selecting a waypoint close to them, the vehicle sometimes overshoots the stop line.
+As the provided stop line coordinates for the traffic lights in the Udacity Simulator are not exact and additional inaccuracy is added by selecting a waypoint close to them, the vehicle sometimes overshoots the stop line.
