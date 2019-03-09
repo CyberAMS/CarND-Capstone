@@ -298,7 +298,7 @@ def run_inference_for_single_image(self,image, graph):
 
 The traffic light detection is using the [TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection). It is based on the [SSD MobileNet model](https://github.com/tensorflow/models/tree/master/research/object_detection/models) which has been pre-trained on the [COCO dataset](http://cocodataset.org/). Additional traffic light data has been used to fine-tune the model. The model is able to detect traffic lights and classify their color into `GREEN`, `YELLOW` and `RED`.
 
-The additional traffic light data consists of a combination of three datasets from the Udacity Simulator and the Udacity Carla vehicle on the desired testing site. The combination of these three datasets adds up to a total of 2613 images. The model achieves a good balance between accuracy and fast running time.
+The additional traffic light data consists of a combination of three datasets from the Udacity Simulator and the Udacity Carla vehicle on the test site. The combination of these three datasets adds up to a total of 2613 images. The model achieves a good balance between accuracy and fast running time. The benefit of this approach is that the same model can be used for the simulator environment and the real environment.
 
 The detailed [description](./Traffic_Light_Detection/README.md) of the traffic light detection model is located in a separate [folder](./Traffic_Light_Detection/).
 
@@ -317,7 +317,7 @@ Start the Udacity Simulator after the Udacity Carla ROS environment of this proj
 
 ### 2. Simulation results
 
-Here is an example of how the car accelerates and stops as required all by itself. On the right you see the debugging information and camera image.
+Here is an example of how the car accelerates and stops as required all by itself. On the right you see the debugging information and camera image. The traffic light which is used to determine `RED`, `YELLOW` or `GREEN` is marked up with a bounding box.
 
 <img src="docu_images/190309_StAn_CAP_simulator_smallest.gif" width="100%">
 
@@ -349,9 +349,19 @@ rosbag play -l <your bag file>.bag
 
 ### 4. Test results
 
+The following ROS bags from the Udacity Carla vehicle have been tested with the implemented solution.
+
+The first ROS bag contains a back and forth maneuver around the traffic light. The state of the traffic light is always classified correctly. There is only a short instance at the end when the car stops and the traffic light is `GREEN`. In this case no traffic light is detected with high probability at all. As we only react to `RED` and `YELLOW` traffic lights, this is not a big issue for the given task.
+
 <img src="docu_images/190309_StAn_CAP_just_smallest.gif" width="100%">
+
+The second ROS bag contains several full loops around the test site. The state of the traffic light is always classified correctly. There is one repeatable false positive during the loop. A white wall is classified as `GREEN` traffic light. As we only react to `RED` and `YELLOW` traffic lights, this is not a big issue for the given task.
+
 <img src="docu_images/190309_StAn_CAP_loop_smallest.gif" width="100%">
-<img src="docu_images/190309_StAn_CAP_train_smallest.gif" width="100%">
+
+The third ROS bag contains several approaches on the traffic light.
+
+<img src="docu_images/190309_StAn_CAP_train_smallest_short.gif" width="100%">
 
 ## 5. Discussion
 
