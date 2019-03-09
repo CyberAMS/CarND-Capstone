@@ -153,11 +153,11 @@ The Udacity Carla ROS environment for this project uses the following nodes and 
 
 ![alt text][image1]
 
-The `/waypoint_loader` reads the map or trajectory information and publishes a list of waypoints that the vehicle can follow safely. The `/tl_detector` node takes this information and the camera image from the vehicle - either simulation or real - and publishes the state of the traffic light ahead (`GREEN`, `YELLOW`, `RED` or `UNKNOWN`). It also publishes the topic `/debug/bounding_box_img` in which the most relevant detected traffic light is marked up with a bounding box. The above diagram shows the case for the simulated environment in which the `/styx_server` node publishes all the relevant vehicle state and sensor information as well as receives the necessary control signals for steering (not shown), throttle (not shown) and braking. The `/waypoint_updater` node determines the desired speed for the waypoints ahead. The `/pure_pursuit` node calculates the drive-by-wire commands for the `dbw_node` node based on the information about the waypoints ahead.
+The `/waypoint_loader` reads the map or trajectory information and publishes a list of waypoints that the vehicle can follow safely. The `/tl_detector` node takes this information and the camera image from the vehicle - either simulation or real - and publishes the state of the traffic light ahead (`GREEN`, `YELLOW`, `RED` or `UNKNOWN`). It also publishes the topic `/debug/bounding_box_img` (not shown) in which the most relevant detected traffic light is marked up with a bounding box. The above diagram shows the case for the simulated environment in which the `/styx_server` node publishes all the relevant vehicle state and sensor information as well as receives the necessary control signals for steering (not shown), throttle (not shown) and braking. The `/waypoint_updater` node determines the desired speed for the waypoints ahead. The `/pure_pursuit` node calculates the drive-by-wire commands for the `dbw_node` node based on the information about the waypoints ahead.
 
 ### 2. ROS node waypoint_updater.py
 
-The `/waypoint_updater` node constantly looks for the next `LOOKAHEAD_WPS` waypoints. If the next traffic light is either `GREEN` or `UNKNOWN` (`self.stopline_wp_idx == -1`), it will not change the desired speed at the waypoints ahead. If the next traffic light is either `RED` or `YELLOW`, it will use decelerating speed for the waypoints ahead. It is important to mention that the vehicle might detect a `RED` or `YELLOW` traffic light, but will only react to it if the stop line of this traffic light is within distance of the next `LOOKAHEAD_WPS` waypoints.
+The `/waypoint_updater` node constantly looks for the next `LOOKAHEAD_WPS = 100` waypoints. If the next traffic light is either `GREEN` or `UNKNOWN` (`self.stopline_wp_idx == -1`), it will not change the desired speed at the waypoints ahead. If the next traffic light is either `RED` or `YELLOW`, it will use decelerating speed for the waypoints ahead. It is important to mention that the vehicle might detect a `RED` or `YELLOW` traffic light, but will only react to it if the stop line of this traffic light is within distance of the next `LOOKAHEAD_WPS` waypoints.
 
 ```python
 def generate_lane(self):
@@ -192,15 +192,18 @@ def decelerate_waypoints(self, waypoints, closest_idx):
 
 ### 3. ROS node twist_controller.py
 
-The `/twist_controller` node uses a yaw controller and throttle controller to determine steering, throttle and braking to keep the desired direction and speed. If the speed gets close to zero, the throttle is set to zero and the brake is engaged to hold the vehicle in place.
+The `/twist_controller` node uses a yaw controller and throttle controller to determine steering, throttle and braking to keep the desired direction and speed. If the speed gets close to zero, the throttle is set to zero and the brake is engaged to hold the vehicle in place (`brake = 700` Nm is enough for the real Udacity Carla vehicle).
 
 The throttle controller is implemented as PID controller. In order to steer smoothly back when returning from manual driving mode to automatic driving mode, the parameter `ki = 0.001` has been set to a really low value. The parameter `mx = 0.3` defines the maximum throttle and hence indirectly also the maximum speed the vehicle can achieve.
 
 ### 4. ROS node tl_detector.py
 
-The `/tl_detector' node constantly determines whether or not an incoming image needs to be processed. Only every `LIGHT_PROCESS_THRESHOLD`-th image will be processed. The detected traffic light state is only valid if it has been detected `STATE_COUNT_THRESHOLD` times in a row. The function either returns the waypoint index of the stop line when the traffic light is `RED` or `YELLOW` or it returns `-1` if no traffic light stop state has been detected.
+The `/tl_detector` node constantly determines whether or not an incoming image needs to be processed. Only every `LIGHT_PROCESS_THRESHOLD`-th image will be processed. The detected traffic light state is only valid if it has been detected `STATE_COUNT_THRESHOLD` times in a row. The function either returns the waypoint index of the stop line when the traffic light is `RED` or `YELLOW` or it returns `-1` if no traffic light stop state has been detected.
 
 ```python
+LIGHT_PROCESS_THRESHOLD = 4
+STATE_COUNT_THRESHOLD = 3 / LIGHT_PROCESS_THRESHOLD # if we skip images we cannot wait until we see the same light state as often
+
 def image_cb(self, msg):
 	self.camera_image = msg
 	if ((self.traffic_count % LIGHT_PROCESS_THRESHOLD) == 0):
