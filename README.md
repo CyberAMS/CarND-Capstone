@@ -304,20 +304,15 @@ Start the Udacity Simulator after the Udacity Carla ROS environment of this proj
 
 ### 2. Simulation results
 
-Here is an example of how the car accelerates and stops as required all by itself. On the right you see the debugging information.
+Here is an example of how the car accelerates and stops as required all by itself. On the right you see the debugging information and camera image.
 
-<img src="docu_images/190303_StAn_Udacity_Simulator_Run_01_small.gif" width="100%">
+<img src="docu_images/190308_StAn_CAP_simulator_smallest.gif" width="100%">
 
 ### 3. Commands to test the code in the real environment
 
-Download the [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity Carla vehicle. Extract the content and run the ROS bag.
+Download the [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) and [test bags](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view) that were recorded on the Udacity Carla vehicle. Extract the contents.
 
-```console
-unzip traffic_light_bag_file.zip
-rosbag play -l traffic_light_bag_file/traffic_light_training.bag
-```
-
-Open another terminal and start the Udacity Carla ROS environment of this project with the `site.launch` file.
+Start the Udacity Carla ROS environment of this project with the `site.launch` file.
 
 ```console
 <make sure you are in the ros subdirectory of this repository>
@@ -326,11 +321,24 @@ source devel/setup.sh
 roslaunch launch/site.launch
 ```
 
-And then ?!?
+Open another terminal and open an image viewer to see the camera image.
+
+```console
+rosrun rqt_image_view rqt_image_view topic:=/image_raw
+```
+
+Open another terminal and run the ROS bag.
+
+```console
+unzip <your zipped bag files>.zip
+rosbag play -l <your bag file>.bag
+```
 
 ### 4. Test results
 
-No results yet
+<img src="docu_images/190308_StAn_CAP_just_smallest.gif" width="100%">
+<img src="docu_images/190308_StAn_CAP_loop_smallest.gif" width="100%">
+<img src="docu_images/190308_StAn_CAP_train_smallest.gif" width="100%">
 
 ## 5. Discussion
 
