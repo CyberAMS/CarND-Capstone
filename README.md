@@ -240,10 +240,10 @@ return line_wp_idx, classified_state
 
 ### 5. TLClassifier object
 
-The `TLClassifier' class in `tl_classifier.py` offers the method `get_classification` that calls TensorFlow to run the inference for a single image with the method `run_inference_for_single_image`. It checks whether the bounding boxes of the detected traffic lights are in the expected area of the image. And then it only takes the image that is in the expected area and has the largest bounding box. At the end it publishes the image with the bounding box.
+The `TLClassifier` class in `tl_classifier.py` offers the method `get_classification` that calls TensorFlow to run the inference for a single image with the method `run_inference_for_single_image`. It determines the traffic light with the largest bounding box and uses it to detect the state. At the end it publishes the image with the marked up bounding box.
 
 ```python
-def get_classification(self, image):
+def get_classification(self, image):	
 	image_np = self.load_image_into_numpy_array(image)
 	output_dict = self.run_inference_for_single_image(image_np, self.detection_graph)
 	text_string = "Classified light (idx {0}) state : {1} with probability {2}"
@@ -328,6 +328,10 @@ Here is an example of how the car accelerates and stops as required all by itsel
 
 Download the [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) and [test bags](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view) that were recorded on the Udacity Carla vehicle. Extract the contents.
 
+```console
+unzip <your zipped bag files>.zip
+```
+
 Start the Udacity Carla ROS environment of this project with the `site.launch` file.
 
 ```console
@@ -346,7 +350,6 @@ rosrun rqt_image_view rqt_image_view topic:=/debug/bounding_box_img
 Open another terminal and run the ROS bag.
 
 ```console
-unzip <your zipped bag files>.zip
 rosbag play -l <your bag file>.bag
 ```
 
